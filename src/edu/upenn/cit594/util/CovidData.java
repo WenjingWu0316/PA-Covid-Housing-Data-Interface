@@ -2,7 +2,7 @@ package edu.upenn.cit594.util;
 
 import java.util.Date;
 
-public class CovidData {
+public class CovidData {//
 	private Date timeStamp;
 	private String zipCode;
 	private int partiallyVaccPopulation;
