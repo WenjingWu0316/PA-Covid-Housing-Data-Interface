@@ -20,9 +20,10 @@ public class CommandLineUserInterface {
 	
 	public void start() {
 		int choice;
-		
+		int run = 1;
+		while(run==1) {
 		System.out.println("Enter 0 to exit, enter 1 to show total population, enter 2 to show vaccinations per capita.> ");
-		System.out.flush();
+		//System.out.flush();
 		choice = in.nextInt();
 		if(choice==1) {
 			showAllPopulation();
@@ -39,7 +40,7 @@ public class CommandLineUserInterface {
 				break;
 			}else {
 				System.out.println("Invaid input, please type 'partial' or 'full'.> ");
-				System.out.flush();
+				
 			}}
 		}else if(choice==3) {
 			
@@ -50,10 +51,14 @@ public class CommandLineUserInterface {
 		}
 		else if(choice==6) {
 			
+		}else if(choice==0) {
+			run =0;
 		}else {
 			System.out.println("ERROR:invalid input, program terminates.");
-			System.out.flush();
-			//break;
+			//System.out.flush();
+			run = 0;
+		}
+		System.out.flush();
 		}
 		in.close();
 	}

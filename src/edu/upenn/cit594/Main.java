@@ -1,13 +1,19 @@
 package edu.upenn.cit594;
 
 import java.io.File;
+
 import java.io.IOException;
 
+import edu.upenn.cit594.datamanagement.CSVFileReaderCovid;
+import edu.upenn.cit594.datamanagement.JSONFileReaderCovid;
 import edu.upenn.cit594.datamanagement.Reader;
 import edu.upenn.cit594.datamanagement.TxtFileReader;
+import edu.upenn.cit594.processor.CovidProcessor;
+import edu.upenn.cit594.processor.PopulationProcessor;
+import edu.upenn.cit594.ui.CommandLineUserInterface;
 
 
-public class main {
+public class Main {
 	//String[] args = {"covid_data.csv", "property.txt", "population.txt", "log.txt"};
 	public static void main(String[] args) {
 		if (args.length!=4) {
@@ -19,8 +25,8 @@ public class main {
 		String populationFileName = args[2];
 		String logFileName = args[3];
 		
-		//System.out.println(tweetsFileName+", "+statesFileName+", "+logFileName);
-		//System.out.println(tweetsFileName.substring(tweetsFileName.length()-4));
+//		System.out.println(covidFileName+", "+populationFileName+", "+logFileName);
+//		System.out.println(covidFileName.substring(covidFileName.length()-4));
 		Reader readerForPopulation;
 		Reader readerForCovid;
 		//check whether tweet file is valid
@@ -28,12 +34,12 @@ public class main {
 			//System.out.println("tweetFile is a valid txt file");
 			File file = new File(covidFileName);
 			if(!file.exists() || !file.canRead()) {return;}
-			readerForCovid = new CSVFileReader(covidFileName);
+			readerForCovid = new CSVFileReaderCovid(covidFileName);
 		}else if(covidFileName.substring(covidFileName.length()-5).equals(".json")) {
 			//System.out.println("tweetFile is a valid json file");
 			File file = new File(covidFileName);
 			if(!file.exists() || !file.canRead()) {return;}
-			readerForCovid = new JsonFileReader(covidFileName);
+			readerForCovid = new JSONFileReaderCovid(covidFileName);
 		}else {
 			System.out.println("ERROR: covid file does not match a recognized extension");
 			return;
@@ -65,8 +71,10 @@ public class main {
 			if(!file.canWrite()) {return;}
 		}
 		
-//		CommandLineUserInterface ui = new CommandLineUserInterface(processor);
-//		ui.start;
+		PopulationProcessor populationProcessor = new PopulationProcessor(readerForPopulation);
+		CovidProcessor covidProcessor = new CovidProcessor(populationProcessor, readerForCovid);
+		CommandLineUserInterface ui = new CommandLineUserInterface(populationProcessor, covidProcessor);
+		ui.start();
 		
 	}
 }

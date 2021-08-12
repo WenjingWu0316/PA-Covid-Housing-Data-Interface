@@ -24,6 +24,7 @@ public class CovidProcessor {
 
 	
 	public Map<Integer, Double> getPartialVacc() {
+		//System.out.println("-----CovidProcessor: getPartialVacc called");
 		Map<Integer, Double> zipVaccMap = new TreeMap<>();
 		String timeStamp;
 		int zipCode;
@@ -32,7 +33,7 @@ public class CovidProcessor {
 			timeStamp = c.getTimeStamp();
 			zipCode = c.getZipCode();
 			ParPopulation= c.getPartiallyVaccPopulation();
-			if(timeStamp.substring(6,11).equals("05-20")&& ParPopulation!=0) {
+			if(timeStamp.substring(5,10).equals("05-20")&& ParPopulation!=0) {
 				if(populationMap.containsKey(zipCode)) {
 //					System.out.println(ParPopulation);
 //					System.out.println(populationMap.get(zipCode));
@@ -47,17 +48,25 @@ public class CovidProcessor {
 	}
 	
 	public Map<Integer, Double> getFullVacc() {
+		//System.out.println("-----CovidProcessor: getFullVacc called");
 		Map<Integer, Double> zipVaccMap = new TreeMap<>();
 		String timeStamp;
 		int zipCode;
 		int FullPopulation;
+		//System.out.println(covidList.size());
 		for(CovidData c: covidList) {
 			timeStamp = c.getTimeStamp();
+			//System.out.println(timeStamp);
 			zipCode = c.getZipCode();
+			//System.out.println(zipCode);
 			FullPopulation = c.getFullyVaccPopulation();
-			if(timeStamp.substring(6,11).equals("05-20")&& FullPopulation!=0) {
+			//System.out.println(timeStamp.substring(5,10).equals("05-20"));
+			if(timeStamp.substring(5,10).equals("05-20")&& FullPopulation!=0) {
 				if(populationMap.containsKey(zipCode)) {
+					//System.out.println(FullPopulation);
+					//System.out.println(populationMap.get(zipCode));
 					double vaccPerCapita = (double) FullPopulation / populationMap.get(zipCode);
+					//System.out.println(populationMap.get(zipCode));
 					zipVaccMap.put(zipCode, vaccPerCapita);
 				}
 			}

@@ -23,6 +23,7 @@ protected String filename;
 		filename = name;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CovidData> getAllData(){
 		//System.out.println("-----dataManagement: getAllStates called");
@@ -87,6 +88,7 @@ protected String filename;
 				
 				if(m.matches()) {
 					String timeStamp = m.group(timestampCol);
+					timeStamp = timeStamp.substring(1, timeStamp.length()-1);
 					int zipCode = Integer.valueOf(m.group(zipcodeCol));
 					partialVacc = (m.group(partialVaccCol).equals(""))? 0: Integer.parseInt(m.group(partialVaccCol));
 					fullVacc = (m.group(fullVaccCol).equals(""))? 0: Integer.parseInt(m.group(fullVaccCol)); 

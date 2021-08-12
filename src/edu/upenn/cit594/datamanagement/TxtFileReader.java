@@ -20,7 +20,7 @@ protected String filename;
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Population> getAllData(){
-		//System.out.println("-----dataManagement: getAllTweets called");
+		//System.out.println("-----TxtFileReader: getAllData called");
 		List<Population> populationList = new ArrayList<Population>();
 		
 		//Read the file
