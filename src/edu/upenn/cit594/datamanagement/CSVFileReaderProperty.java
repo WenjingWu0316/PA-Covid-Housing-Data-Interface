@@ -13,11 +13,11 @@ import java.util.regex.Pattern;
 
 import edu.upenn.cit594.util.Property;
 
-public class CSVFilerReaderProperty {
+public class CSVFileReaderProperty {
 	
 	protected String filename;
 	
-	public CSVFilerReaderProperty(String name) {
+	public CSVFileReaderProperty(String name) {
 		this.filename = name;
 	}
 

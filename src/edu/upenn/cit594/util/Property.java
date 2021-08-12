@@ -18,13 +18,29 @@ public class Property {
 		this.total_livable_area = Double.parseDouble(singleLine.get("total_livable_area")) ;
 		this.market_value = Double.parseDouble(singleLine.get("market_value"));	
 	}
-	
 
 	@Override
 	public String toString() {
 		return "\n zip_code = " + this.zip_code + ", building_code = " + this.building_code + 
 				", total_livable_area = " + this.total_livable_area + ", market_value = " + this.market_value;
 	}
+	
+	public String getZipcode() {
+		return this.zip_code;
+	}
+	
+	public String getBuildingcode() {
+		return this.building_code;
+	}
+	
+	public Double getTotalLivableArea() {
+		return this.total_livable_area;
+	}
+	
+	public Double getMarketvalue() {
+		return this.market_value;
+	}
+	
 	
 	
 }
