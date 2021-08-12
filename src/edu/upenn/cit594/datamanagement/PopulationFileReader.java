@@ -11,14 +11,12 @@ import java.util.regex.Pattern;
 
 import edu.upenn.cit594.util.Population;
 
-public class TxtFileReader implements Reader{
+public class PopulationFileReader{
 protected String filename;
 	
-	public TxtFileReader(String name) {
+	public PopulationFileReader(String name) {
 		filename = name;
 	}
-	@SuppressWarnings("unchecked")
-	@Override
 	public List<Population> getAllData(){
 		//System.out.println("-----TxtFileReader: getAllData called");
 		List<Population> populationList = new ArrayList<Population>();
@@ -40,10 +38,10 @@ protected String filename;
 			
 			String line;
 			while((line = bufferedReader.readLine())!=null) {
-				Matcher m = p.matcher(line);
+				Matcher m = p.matcher(line.trim());
 				if(m.matches()) {
 				
-				int zipCode = Integer.valueOf(m.group(1));
+				String zipCode = m.group(1);
 				int population = Integer.valueOf(m.group(2));
 				Population pop = new Population(zipCode, population);
 				populationList.add(pop);}

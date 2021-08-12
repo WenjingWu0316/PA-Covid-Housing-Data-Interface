@@ -6,7 +6,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,7 @@ import java.util.regex.Pattern;
 
 import edu.upenn.cit594.util.CovidData;
 
-public class CSVFileReaderCovid implements Reader{
+public class CSVFileReaderCovid implements CovidFileReader{
 	
 protected String filename;
 	
@@ -23,7 +25,6 @@ protected String filename;
 		filename = name;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<CovidData> getAllData(){
 		//System.out.println("-----dataManagement: getAllStates called");
@@ -40,11 +41,11 @@ protected String filename;
 		
 		
 		//Time stamp 
-		//DateFormat f = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//DateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		//find records on 20/05/2021 17:20
-
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date timeStamp;
 		//try-catch statement to catch IOException
 		try {
 			fileReader = new FileReader(file);
@@ -83,13 +84,14 @@ protected String filename;
 			
 			int partialVacc;
 			int fullVacc;
+			String zipCode;
 			while((line = bufferedReader.readLine())!=null) {
-				Matcher m = p.matcher(line);
+				Matcher m = p.matcher(line.trim());
 				
 				if(m.matches()) {
-					String timeStamp = m.group(timestampCol);
-					timeStamp = timeStamp.substring(1, timeStamp.length()-1);
-					int zipCode = Integer.valueOf(m.group(zipcodeCol));
+					timeStamp = sdf.parse(m.group(timestampCol));
+					//timeStamp = timeStamp.substring(1, timeStamp.length()-1);
+					zipCode = m.group(zipcodeCol);
 					partialVacc = (m.group(partialVaccCol).equals(""))? 0: Integer.parseInt(m.group(partialVaccCol));
 					fullVacc = (m.group(fullVaccCol).equals(""))? 0: Integer.parseInt(m.group(fullVaccCol)); 
 		

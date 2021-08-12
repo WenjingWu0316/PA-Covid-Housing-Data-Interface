@@ -1,20 +1,22 @@
 package edu.upenn.cit594.util;
 
+import java.util.Date;
+
 public class CovidData {
-	private String timeStamp;
-	private int zipCode;
+	private Date timeStamp;
+	private String zipCode;
 	private int partiallyVaccPopulation;
 	private int fullyVaccPopulation;
 
-	public CovidData(String timeStamp, int zipCode, int partiallyVaccPopulation, int fullyVaccPopulation) {
+	public CovidData(Date timeStamp, String zipCode, int partiallyVaccPopulation, int fullyVaccPopulation) {
 		this.timeStamp = timeStamp;
 		this.zipCode = zipCode;
 		this.partiallyVaccPopulation = partiallyVaccPopulation;
 		this.fullyVaccPopulation = fullyVaccPopulation;
 	}
 	
-	public String getTimeStamp() {return timeStamp;}
-	public int getZipCode() {return zipCode;}
+	public Date getTimeStamp() {return timeStamp;}
+	public String getZipCode() {return zipCode;}
 	public int getPartiallyVaccPopulation() {return partiallyVaccPopulation;}
 	public int getFullyVaccPopulation() {return fullyVaccPopulation;}
 }

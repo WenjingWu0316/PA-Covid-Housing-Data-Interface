@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -14,14 +16,13 @@ import org.json.simple.parser.ParseException;
 
 import edu.upenn.cit594.util.CovidData;
 
-public class JSONFileReaderCovid implements Reader{
+public class JSONFileReaderCovid implements CovidFileReader{
 	
 protected String filename;
 	
 	public JSONFileReaderCovid(String name) {
 		filename = name;
 	}
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<CovidData> getAllData(){
 		//System.out.println("-----dataManagement-JSON: getAllData called");
@@ -48,16 +49,22 @@ protected String filename;
 			//time pattern /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/
 			Object objLine;
 			JSONObject jo;
-			String timeStamp;
-			int zipCode;
+			
+			String zipCode;
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date timeStamp = null;
 			int parVacc;
 			int fullVacc ;
 			for(int i = 0; i<ja.size(); i++) { //
 				objLine = ja.get(i);
 				jo = (JSONObject) objLine;
 				//System.out.println(jo.get("location"));
-				timeStamp = (String) jo.get("etl_timestamp");
-				zipCode = (int)(long)jo.get("zip_code") ;
+				try {
+					timeStamp = sdf.parse((String)jo.get("etl_timestamp"));
+				} catch (java.text.ParseException e) {
+					e.printStackTrace();
+				}
+				zipCode = String.valueOf(jo.get("zip_code")) ;
 				//System.out.println(jo.get("partially_vaccinated").equals(""));
 				if(jo.containsKey("partially_vaccinated")) {
 					parVacc = (int)(long)jo.get("partially_vaccinated");

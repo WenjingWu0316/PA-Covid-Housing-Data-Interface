@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import edu.upenn.cit594.datamanagement.CSVFileReaderCovid;
 import edu.upenn.cit594.datamanagement.JSONFileReaderCovid;
-import edu.upenn.cit594.datamanagement.Reader;
-import edu.upenn.cit594.datamanagement.TxtFileReader;
+import edu.upenn.cit594.datamanagement.CovidFileReader;
+import edu.upenn.cit594.datamanagement.PopulationFileReader;
 import edu.upenn.cit594.processor.CovidProcessor;
 import edu.upenn.cit594.processor.PopulationProcessor;
 import edu.upenn.cit594.ui.CommandLineUserInterface;
@@ -18,6 +18,7 @@ public class Main {
 	public static void main(String[] args) {
 		if (args.length!=4) {
 			System.out.println("ERROR: Command line input is incorrect");
+			System.out.flush();
 			return;
 		}
 		String covidFileName = args[0];
@@ -27,8 +28,8 @@ public class Main {
 		
 //		System.out.println(covidFileName+", "+populationFileName+", "+logFileName);
 //		System.out.println(covidFileName.substring(covidFileName.length()-4));
-		Reader readerForPopulation;
-		Reader readerForCovid;
+		PopulationFileReader readerForPopulation;
+		CovidFileReader readerForCovid;
 		//check whether tweet file is valid
 		if(covidFileName.substring(covidFileName.length()-4).equals(".csv") ) {
 			//System.out.println("tweetFile is a valid txt file");
@@ -42,6 +43,7 @@ public class Main {
 			readerForCovid = new JSONFileReaderCovid(covidFileName);
 		}else {
 			System.out.println("ERROR: covid file does not match a recognized extension");
+			System.out.flush();
 			return;
 		}
 		
@@ -50,9 +52,10 @@ public class Main {
 			//System.out.println("stateFile is a valid csv file");
 			File file = new File(populationFileName);
 			if(!file.exists() || !file.canRead()) {return;}
-			readerForPopulation = new TxtFileReader(populationFileName);
+			readerForPopulation = new PopulationFileReader(populationFileName);
 		}else{
 			System.out.println("ERROR: population file does not match a recognized extension");
+			System.out.flush();
 			return;
 		}
 		
