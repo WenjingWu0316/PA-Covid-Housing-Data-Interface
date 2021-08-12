@@ -2,10 +2,12 @@ package edu.upenn.cit594.processor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import edu.upenn.cit594.datamanagement.CSVFileReaderProperty;
 import edu.upenn.cit594.logging.Logging;
 import edu.upenn.cit594.util.Property;
-import edu.upenn.cit594.datamanagement.CSVFileReaderProperty;
 
 public class PropertyProcessor {
 	
@@ -28,8 +30,12 @@ public class PropertyProcessor {
 		return this.logging;
 	}
 	
-	public double calcAveragebyZipcode(String zipcode, String type) {
-		double avg = 0;
+	
+	
+	
+	public double calcStatisticsbyZipcode(String zipcode, String type, String calcType) {
+	
+		double result = 0;
 		
 		List<Double> values = new ArrayList<Double>();
 		if (type.equals("Market Value")) {
@@ -47,13 +53,19 @@ public class PropertyProcessor {
 		}
 		
 		double sum = 0;
-		for(Double value: values) {
-			sum += value;
+		if(values.size()>0) {
+			for(Double value: values) {
+				sum += value;
+			}
+			
+			if(calcType == "average") {
+				result = sum/values.size();
+			}else {
+				result = sum;
+			}
+			
 		}
 		
-		avg = sum/values.size();
-		System.out.println(zipcode + avg);
-			
-		return avg;		
+		return result;		
 	}
 }

@@ -4,20 +4,25 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Scanner;
 
 import edu.upenn.cit594.processor.CovidProcessor;
 import edu.upenn.cit594.processor.PopulationProcessor;
+import edu.upenn.cit594.processor.PropertyProcessor;
 
 public class CommandLineUserInterface {
 	
 	PopulationProcessor populationProcessor;
 	Scanner in;
 	CovidProcessor covidProcessor;
-
-	public CommandLineUserInterface(PopulationProcessor populationProcessor, CovidProcessor covidProcessor) {
+	PropertyProcessor propertyProcessor;
+	
+	public CommandLineUserInterface(PopulationProcessor populationProcessor, CovidProcessor covidProcessor, PropertyProcessor propertyProcessor) {
 		this.populationProcessor = populationProcessor;
 		this.covidProcessor = covidProcessor;
+		this.propertyProcessor = propertyProcessor;
 		in = new Scanner(System.in);
 	}
 	
@@ -47,10 +52,16 @@ public class CommandLineUserInterface {
 			}}
 		}else if(choice==3) {
 			
+			getAverageProperyInfobyZipCode("Market Value", "average", true);
+
 		}else if(choice==4) {
+			
+			getAverageProperyInfobyZipCode("Total Livable Area", "average", true);
 			
 		}else if(choice==5) {
 			
+			getMarketValuePerCapitalbyZipCode("Market Value", true);
+	
 		}
 		else if(choice==6) {
 			
@@ -104,4 +115,50 @@ public class CommandLineUserInterface {
 
 //		
 //	}
+	
+
+	public String truncateInteger(double number) {
+		
+		String numberString = String.valueOf(number);
+		
+		String regex = "^[^.]*";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(numberString);
+		
+		return m.group();
+	}
+
+
+	protected void getAverageProperyInfobyZipCode(String type, String calcType, boolean truncateFlag) {
+		System.out.println("Please enter a zip-code. ");
+		System.out.flush();
+		String zipcode = in.next(); 
+		double result = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, type, calcType);	
+		
+		if(truncateFlag) {
+			System.out.println(zipcode + truncateInteger(result));
+		}
+	}
+	
+
+	protected void getMarketValuePerCapitalbyZipCode(String type, boolean truncateFlag) {
+		System.out.println("Please enter a zip-code. ");
+		System.out.flush();
+		String zipcode = in.next(); 
+		
+		double sum = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, type, "sum");	
+		int population = this.populationProcessor.getPopulationByZipcode(zipcode);
+		
+		double MarketValuePerCapital = 0;
+		if(population != 0 ) {
+			MarketValuePerCapital = sum/population;
+		}
+		
+		if(truncateFlag) {
+			System.out.println(zipcode + truncateInteger(MarketValuePerCapital));
+		}
+		
+	}
+	
+	
 }

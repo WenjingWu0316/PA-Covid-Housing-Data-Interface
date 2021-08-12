@@ -35,5 +35,16 @@ public class PopulationProcessor {
 		return totalPopulation;
 	}
 	
+	/*
+	 * Get population by zip code
+	 */
+	public int getPopulationByZipcode(String zipcode) {
+		for (Population p: this.populationList) {
+			if(p.getZipCode()==zipcode) {
+				return p.getPopulation();
+			}
+		}
+		return 0;
+	}
 	
 }

@@ -6,11 +6,14 @@ import java.io.File;
 import java.io.IOException;
 
 import edu.upenn.cit594.datamanagement.CSVFileReaderCovid;
+import edu.upenn.cit594.datamanagement.CSVFileReaderProperty;
 import edu.upenn.cit594.datamanagement.JSONFileReaderCovid;
 import edu.upenn.cit594.datamanagement.CovidFileReader;
 import edu.upenn.cit594.datamanagement.PopulationFileReader;
+import edu.upenn.cit594.logging.Logging;
 import edu.upenn.cit594.processor.CovidProcessor;
 import edu.upenn.cit594.processor.PopulationProcessor;
+import edu.upenn.cit594.processor.PropertyProcessor;
 import edu.upenn.cit594.ui.CommandLineUserInterface;
 
 
@@ -31,7 +34,7 @@ public class Main {
 //		System.out.println(covidFileName.substring(covidFileName.length()-4));
 		PopulationFileReader readerForPopulation;
 		CovidFileReader readerForCovid;
-		//check whether tweet file is valid
+		//check whether COVID file is valid
 		if(covidFileName.substring(covidFileName.length()-4).equals(".csv") ) {
 			//System.out.println("tweetFile is a valid txt file");
 			File file = new File(covidFileName);
@@ -74,9 +77,16 @@ public class Main {
 			if(!file.canWrite()) {return;}
 		}
 		
+		
+		CSVFileReaderProperty PropertyReader = new CSVFileReaderProperty(propertyFileName);
+		Logging logging = Logging.getInstance();
+		logging.setInstance(logFileName);	
+		PropertyProcessor propertyProcessor = new PropertyProcessor(PropertyReader, logging);
+		
+		
 		PopulationProcessor populationProcessor = new PopulationProcessor(readerForPopulation);
 		CovidProcessor covidProcessor = new CovidProcessor(populationProcessor, readerForCovid);
-		CommandLineUserInterface ui = new CommandLineUserInterface(populationProcessor, covidProcessor);
+		CommandLineUserInterface ui = new CommandLineUserInterface(populationProcessor, covidProcessor, propertyProcessor);
 		ui.start();
 		
 	}
