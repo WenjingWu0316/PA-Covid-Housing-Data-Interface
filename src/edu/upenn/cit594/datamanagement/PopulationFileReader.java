@@ -59,7 +59,7 @@ protected String filename;
 			
 			e.printStackTrace();
 		}
-		//System.out.println("First TweetData is: "+tweetList.get(0).getLatitude()+", "+tweetList.get(0).getLongtitude()+", "+tweetList.get(0).getText());
+		
 		return populationList;
 	}
 

@@ -1,13 +1,10 @@
 package edu.upenn.cit594.processor;
 
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-
-import edu.upenn.cit594.datamanagement.CovidFileReader;
 import edu.upenn.cit594.datamanagement.PopulationFileReader;
-import edu.upenn.cit594.util.CovidData;
 import edu.upenn.cit594.util.Population;
 
 public class PopulationProcessor {

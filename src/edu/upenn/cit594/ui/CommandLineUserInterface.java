@@ -101,7 +101,7 @@ public class CommandLineUserInterface {
 //			System.out.printf("%d %.4f%n",entry.getKey(),n);
 //		}
 //		System.out.println("END OUTPUT");
-//		System.out.flush();
+
 //		
 //	}
 }

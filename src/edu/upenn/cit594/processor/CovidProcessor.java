@@ -66,7 +66,6 @@ public class CovidProcessor {
 	}
 	
 //	public Map<Integer, Double> getFullVacc() {
-//		//System.out.println("-----CovidProcessor: getFullVacc called");
 //		Map<Integer, Double> zipVaccMap = new TreeMap<>();
 //		String timeStamp;
 //		int zipCode;

@@ -79,7 +79,7 @@ protected String filename;
 			regex = regex.repeat(--columnNumber);
 			//System.out.println(regex);
 			regex = "^"+regex+"(.*)$";
-			//System.out.println("****DEBUG: "+regex);
+			
 			Pattern p = Pattern.compile(regex);
 			
 			int partialVacc;

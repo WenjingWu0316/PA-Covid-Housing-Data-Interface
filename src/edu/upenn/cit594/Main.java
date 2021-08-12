@@ -2,6 +2,7 @@ package edu.upenn.cit594;
 
 import java.io.File;
 
+
 import java.io.IOException;
 
 import edu.upenn.cit594.datamanagement.CSVFileReaderCovid;
@@ -67,7 +68,6 @@ public class Main {
 					return;
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else {//if file does exist but can't be written, return and terminate the program
