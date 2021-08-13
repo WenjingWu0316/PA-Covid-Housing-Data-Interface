@@ -51,7 +51,7 @@ public class Main {
 			return;
 		}
 		
-		//check whether states file is valid
+		//check whether population file is valid
 		if(populationFileName.substring(populationFileName.length()-4).equals(".txt")) {
 			//System.out.println("stateFile is a valid csv file");
 			File file = new File(populationFileName);

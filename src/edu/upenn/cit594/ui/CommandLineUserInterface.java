@@ -125,9 +125,12 @@ public class CommandLineUserInterface {
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(numberString);
 		
-		return m.group();
+		if(m.find()) {
+			return m.group();
+		}
+		
+		return "0";
 	}
-
 
 	protected void getAverageProperyInfobyZipCode(String type, String calcType, boolean truncateFlag) {
 		System.out.println("Please enter a zip-code. ");
@@ -136,7 +139,7 @@ public class CommandLineUserInterface {
 		double result = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, type, calcType);	
 		
 		if(truncateFlag) {
-			System.out.println(zipcode + truncateInteger(result));
+			System.out.println(zipcode + " " + truncateInteger(result));
 		}
 	}
 	
@@ -155,10 +158,7 @@ public class CommandLineUserInterface {
 		}
 		
 		if(truncateFlag) {
-			System.out.println(zipcode + truncateInteger(MarketValuePerCapital));
+			System.out.println(zipcode + " " +  truncateInteger(MarketValuePerCapital));
 		}
-		
 	}
-	
-	
 }

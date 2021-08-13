@@ -31,31 +31,47 @@ public class PropertyProcessor {
 	}
 	
 	
-	
-	
 	public double calcStatisticsbyZipcode(String zipcode, String type, String calcType) {
 	
 		double result = 0;
 		
 		List<Double> values = new ArrayList<Double>();
+		
+		Double value;
+		
+		/*
+		for(Property property: this.Properties) {
+			if (property.getZipcode().equals(zipcode) ) {
+				if((value = property.getValueByName(type)) != null) {
+					values.add(value);
+				}	
+			}
+		}
+		
+		*/
 		if (type.equals("Market Value")) {
 			for(Property property: this.Properties) {
-				if (property.getZipcode().equals(zipcode)) {
-					values.add(property.getMarketvalue());
+				if (property.getZipcode().equals(zipcode) ) {
+					if((value=property.getMarketvalue()) != null ) {
+						values.add(value);
+					}	
 				}
 			}
 		}else if (type.equals("Total Livable Area")){
 			for(Property property: this.Properties) {
 				if (property.getZipcode().equals(zipcode)) {
-					values.add(property.getTotalLivableArea());
+					if((value=property.getTotalLivableArea()) != null ) {
+						values.add(value);
+					}						
 				}
+				
 			}
 		}
 		
 		double sum = 0;
 		if(values.size()>0) {
-			for(Double value: values) {
-				sum += value;
+			for(Double val: values) {
+				sum += val;
 			}
 			
 			if(calcType == "average") {
