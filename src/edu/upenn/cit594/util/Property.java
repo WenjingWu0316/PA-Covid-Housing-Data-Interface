@@ -10,7 +10,11 @@ public class Property {
 	Double market_value;
 		
 	public Property(Map<String, String> singleLine) {
-		this.zip_code = singleLine.get("zip_code").strip().substring(0, 5); // first five digits of zip code
+		
+		// first five digits of zipcode
+		String zipcode = singleLine.get("zip_code").strip();
+		this.zip_code = zipcode.length() > 5 ? zipcode.substring(0, 5) : zipcode;
+
 		this.building_code = singleLine.get("building_code").strip();
 		
 		try{
