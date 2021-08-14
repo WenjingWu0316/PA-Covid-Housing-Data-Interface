@@ -25,6 +25,7 @@ public class CommandLineUserInterface {
 		this.populationProcessor = populationProcessor;
 		this.covidProcessor = covidProcessor;
 		this.propertyProcessor = propertyProcessor;
+		this.logging = Logging.getInstance();
 		
 		in = new Scanner(System.in);
 	}
@@ -79,10 +80,12 @@ public class CommandLineUserInterface {
 			
 		}else if(choice==0) {
 			run =0;
+			logging.closeLog();
 		}else {
 			System.out.println("ERROR:invalid input, program terminates.");
 			System.out.flush();
 			run = 0;
+			logging.closeLog();
 		}
 		}
 		in.close();
