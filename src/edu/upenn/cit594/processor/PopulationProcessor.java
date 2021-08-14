@@ -40,7 +40,7 @@ public class PopulationProcessor {
 	 */
 	public int getPopulationByZipcode(String zipcode) {
 		for (Population p: this.populationList) {
-			if(p.getZipCode()==zipcode) {
+			if(p.getZipCode().equals(zipcode)) {
 				return p.getPopulation();
 			}
 		}
