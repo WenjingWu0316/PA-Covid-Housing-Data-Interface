@@ -3,7 +3,10 @@ package edu.upenn.cit594;
 import java.io.File;
 
 
+
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import edu.upenn.cit594.datamanagement.CSVFileReaderCovid;
 import edu.upenn.cit594.datamanagement.CSVFileReaderProperty;
@@ -18,8 +21,9 @@ import edu.upenn.cit594.ui.CommandLineUserInterface;
 
 
 public class Main {
-	//String[] args = {"covid_data.csv", "property.txt", "population.txt", "log.txt"};
+
 	public static void main(String[] args) {
+		
 		if (args.length!=4) {
 			System.out.println("ERROR: Command line input is incorrect");
 			System.out.flush();
@@ -30,18 +34,21 @@ public class Main {
 		String populationFileName = args[2];
 		String logFileName = args[3];
 		
-//		System.out.println(covidFileName+", "+populationFileName+", "+logFileName);
-//		System.out.println(covidFileName.substring(covidFileName.length()-4));
+		Logging logging = Logging.getInstance();
+		logging.setInstance(logFileName);
+		String contentToLog = covidFileName+" "+propertyFileName+" "+populationFileName+" "+logFileName;
+		Logging.logToFile(contentToLog);
+		
+
 		PopulationFileReader readerForPopulation;
 		CovidFileReader readerForCovid;
+		
 		//check whether COVID file is valid
 		if(covidFileName.substring(covidFileName.length()-4).equals(".csv") ) {
-			//System.out.println("tweetFile is a valid txt file");
 			File file = new File(covidFileName);
 			if(!file.exists() || !file.canRead()) {return;}
 			readerForCovid = new CSVFileReaderCovid(covidFileName);
 		}else if(covidFileName.substring(covidFileName.length()-5).equals(".json")) {
-			//System.out.println("tweetFile is a valid json file");
 			File file = new File(covidFileName);
 			if(!file.exists() || !file.canRead()) {return;}
 			readerForCovid = new JSONFileReaderCovid(covidFileName);
@@ -53,7 +60,6 @@ public class Main {
 		
 		//check whether population file is valid
 		if(populationFileName.substring(populationFileName.length()-4).equals(".txt")) {
-			//System.out.println("stateFile is a valid csv file");
 			File file = new File(populationFileName);
 			if(!file.exists() || !file.canRead()) {return;}
 			readerForPopulation = new PopulationFileReader(populationFileName);
@@ -79,8 +85,7 @@ public class Main {
 		
 		
 		CSVFileReaderProperty PropertyReader = new CSVFileReaderProperty(propertyFileName);
-		Logging logging = Logging.getInstance();
-		logging.setInstance(logFileName);	
+			
 		PropertyProcessor propertyProcessor = new PropertyProcessor(PropertyReader, logging);
 		
 		

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.upenn.cit594.logging.Logging;
 import edu.upenn.cit594.util.Population;
 
 public class PopulationFileReader{
@@ -18,20 +19,21 @@ protected String filename;
 		filename = name;
 	}
 	public List<Population> getAllData(){
-		//System.out.println("-----TxtFileReader: getAllData called");
+		String contentToLog =this.filename;
+		Logging.logToFile(contentToLog);
 		List<Population> populationList = new ArrayList<Population>();
 		
-		//Read the file
+
 		File file = new File(filename); 
 		
-		//Initialize fileReader and bufferedReader
+
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
 		String regex = "^([0-9]*)\s([0-9]*)$";
 		Pattern p = Pattern.compile(regex);
 		
 		
-		//try-catch statement to catch IOException
+
 		try {
 			fileReader = new FileReader(file);
 			bufferedReader = new BufferedReader(fileReader);

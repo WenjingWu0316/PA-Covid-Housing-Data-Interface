@@ -1,7 +1,7 @@
 package edu.upenn.cit594.processor;
 
 import java.util.Date;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -37,7 +37,7 @@ public class CovidProcessor {
 	
 	
 	public Map<String, Double> getVaccCount(boolean partial) {
-		//System.out.println("-----CovidProcessor: getPartialVacc called");
+
 		Date lastestTime = findLatestTime();
 		Map<String, Double> zipVaccMap = new TreeMap<>();
 		Date timeStamp;
@@ -53,42 +53,13 @@ public class CovidProcessor {
 			
 			if(timeStamp.equals(lastestTime) && Population!=0) {
 				if(populationMap.containsKey(zipCode)) {
-//					System.out.println(ParPopulation);
-//					System.out.println(populationMap.get(zipCode));
 					double vaccPerCapita = (double) Population/populationMap.get(zipCode);
 					zipVaccMap.put(zipCode, vaccPerCapita);
-//					System.out.println(zipCode);
-//					System.out.println(vaccPerCapita);
+
 				}
 			}
 		}
 		return zipVaccMap;
 	}
-	
-//	public Map<Integer, Double> getFullVacc() {
-//		Map<Integer, Double> zipVaccMap = new TreeMap<>();
-//		String timeStamp;
-//		int zipCode;
-//		int FullPopulation;
-//		//System.out.println(covidList.size());
-//		for(CovidData c: covidList) {
-//			timeStamp = c.getTimeStamp();
-//			//System.out.println(timeStamp);
-//			zipCode = c.getZipCode();
-//			//System.out.println(zipCode);
-//			FullPopulation = c.getFullyVaccPopulation();
-//			//System.out.println(timeStamp.substring(5,10).equals("05-20"));
-//			if(timeStamp.substring(5,10).equals("05-20")&& FullPopulation!=0) {
-//				if(populationMap.containsKey(zipCode)) {
-//					//System.out.println(FullPopulation);
-//					//System.out.println(populationMap.get(zipCode));
-//					double vaccPerCapita = (double) FullPopulation / populationMap.get(zipCode);
-//					//System.out.println(populationMap.get(zipCode));
-//					zipVaccMap.put(zipCode, vaccPerCapita);
-//				}
-//			}
-//		}
-//		return zipVaccMap;
-//		
-//	}
+
 }

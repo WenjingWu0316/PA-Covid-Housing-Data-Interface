@@ -15,7 +15,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.upenn.cit594.logging.Logging;
 import edu.upenn.cit594.util.CovidData;
+
 
 public class CSVFileReaderCovid implements CovidFileReader{
 	
@@ -27,26 +29,19 @@ protected String filename;
 	
 	@Override
 	public List<CovidData> getAllData(){
-		//System.out.println("-----dataManagement: getAllStates called");
+		
+		String contentToLog =this.filename;
+		Logging.logToFile(contentToLog);
+		
 		List<CovidData> covidList = new ArrayList<CovidData>();
-
 		
 		File file = new File(filename);
-		
-		//Initialize fileReader and bufferedReader
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
-		//String regex = "^([a-zA-Z ]*)\\,([0-9]*\\.?[0-9]+)\\,([+-]?[0-9]*\\.?[0-9]+)$";
-		
-		
-		
-		//Time stamp 
-		//DateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		//find records on 20/05/2021 17:20
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date timeStamp;
-		//try-catch statement to catch IOException
+
 		try {
 			fileReader = new FileReader(file);
 			bufferedReader = new BufferedReader(fileReader);
@@ -56,28 +51,22 @@ protected String filename;
 			int columnNumber = 1;
 			header = bufferedReader.readLine();
 			String[] arrofStr = header.split(",");
-			//System.out.println(header);
+
 			Map<String, Integer> headerColMap = new HashMap<>();
 			for(String s: arrofStr) {
 				headerColMap.put(s, columnNumber++);
-				//System.out.println(s);
-				//System.out.println(columnNumber);
+		
 			}
-			//System.out.println(headerColMap.size());
-			//System.out.println(headerColMap.containsKey("\"etl_timestamp\""));
 			
 			int timestampCol = headerColMap.get("\"etl_timestamp\"");
 			int zipcodeCol = headerColMap.get("\"zip_code\"");
 			int partialVaccCol = headerColMap.get("\"partially_vaccinated\"");
 			int fullVaccCol = headerColMap.get("\"fully_vaccinated\"");
 			columnNumber--;
-//			System.out.println("timestampCol is : "+timestampCol);
-//			System.out.println("zipcodeCol is : "+zipcodeCol);
-//			System.out.println("partialVaccCol is : "+partialVaccCol);
-//			System.out.println("fullVaccCol is : "+fullVaccCol);
+
 			String regex = "(.*)\\,";
 			regex = regex.repeat(--columnNumber);
-			//System.out.println(regex);
+
 			regex = "^"+regex+"(.*)$";
 			
 			Pattern p = Pattern.compile(regex);
@@ -90,15 +79,11 @@ protected String filename;
 				
 				if(m.matches()) {
 					timeStamp = sdf.parse(m.group(timestampCol));
-					//timeStamp = timeStamp.substring(1, timeStamp.length()-1);
 					zipCode = m.group(zipcodeCol);
 					partialVacc = (m.group(partialVaccCol).equals(""))? 0: Integer.parseInt(m.group(partialVaccCol));
 					fullVacc = (m.group(fullVaccCol).equals(""))? 0: Integer.parseInt(m.group(fullVaccCol)); 
 		
-//					System.out.println("timestamp is : "+timeStamp);
-//					System.out.println("zipcode is : "+zipCode);
-//					System.out.println("partialVacc is : "+partialVacc);
-//					System.out.println("fullVacc is : "+fullVacc);
+
 					CovidData c = new CovidData(timeStamp, zipCode, partialVacc, fullVacc);
 					covidList.add(c);}
 			}
@@ -113,7 +98,6 @@ protected String filename;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//System.out.println("First StateData is: "+stateList.get(0).getlatitude()+", "+stateList.get(0).getlongtitude()+", "+stateList.get(0).getstateName());
 		return covidList;
 	}
 

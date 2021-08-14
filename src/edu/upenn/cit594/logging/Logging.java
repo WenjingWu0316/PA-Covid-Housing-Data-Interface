@@ -3,11 +3,14 @@ package edu.upenn.cit594.logging;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Logging {
 
 	private static Logging instance = new Logging();
-	private FileWriter out = null;
+	private PrintWriter out = null;
 
 	private Logging() {
 		
@@ -21,7 +24,7 @@ public class Logging {
 		
 		File file = new File(filename);	
 		try {
-			this.setOut(new FileWriter(file, true));
+			this.setOut(new PrintWriter(new FileWriter(file, true)));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("The log file " + filename + " cannot be opened.");	
@@ -29,29 +32,30 @@ public class Logging {
 	}
 	
 	public void writeLog(String msg) {
-		
-		try {
-			this.out.write(msg);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		this.out.println(msg);
+		this.out.flush();
 	}
 	
 	public void closeLog() {
-		try {
-			this.out.flush();
-			this.out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.out.flush();
+		this.out.close();
 	}
 	
-	public void setOut(FileWriter out) {
+	public void setOut(PrintWriter out) {
 		this.out = out;
 	}
 	
-	public FileWriter getOut() {
+	public PrintWriter getOut() {
 		return this.out;
+	}
+	
+	
+	public static void logToFile(String content) {
+		Logging logging = Logging.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date timeStamp = new Date(System.currentTimeMillis());
+		String currentTime = sdf.format(timeStamp);
+		String contentToLog =currentTime+" "+ content;
+		logging.writeLog(contentToLog);
 	}
 }

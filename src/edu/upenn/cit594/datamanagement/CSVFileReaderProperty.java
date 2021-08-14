@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.upenn.cit594.logging.Logging;
 import edu.upenn.cit594.util.Property;
 
 public class CSVFileReaderProperty {
@@ -103,7 +104,8 @@ public class CSVFileReaderProperty {
 	
 
 	public List<Property> getProperties() {
-
+		String contentToLog =this.filename;
+		Logging.logToFile(contentToLog);
 		if(!this.filename.endsWith(".csv")) {
 			throw new IllegalArgumentException("The file has to be in the .csv format.");	
 		}

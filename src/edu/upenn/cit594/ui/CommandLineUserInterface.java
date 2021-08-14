@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Scanner;
 
+import edu.upenn.cit594.logging.Logging;
 import edu.upenn.cit594.processor.CovidProcessor;
 import edu.upenn.cit594.processor.PopulationProcessor;
 import edu.upenn.cit594.processor.PropertyProcessor;
@@ -18,28 +19,39 @@ public class CommandLineUserInterface {
 	Scanner in;
 	CovidProcessor covidProcessor;
 	PropertyProcessor propertyProcessor;
+	Logging logging;
 	
 	public CommandLineUserInterface(PopulationProcessor populationProcessor, CovidProcessor covidProcessor, PropertyProcessor propertyProcessor) {
 		this.populationProcessor = populationProcessor;
 		this.covidProcessor = covidProcessor;
 		this.propertyProcessor = propertyProcessor;
+		
 		in = new Scanner(System.in);
 	}
 	
 	public void start() {
+		String contentToLog;
 		int choice;
 		int run = 1;
+		
 		while(run==1) {
-		System.out.println("Enter 0 to exit, enter 1 to show total population, enter 2 to show vaccinations per capita.> ");
+		System.out.println("Enter 0 to exit, enter 1 to show total population, enter 2 to show vaccinations per capita, enter 3 to show average market value,"
+				+ " enter 4 to show average total livable area, enter 5 to show total residential market value per capita> ");
 		System.out.flush();
+		
 		choice = in.nextInt();
+		contentToLog =String.valueOf(choice);
+		Logging.logToFile(contentToLog);
+		
 		if(choice==1) {
 			showAllPopulation();
 		}else if(choice==2) {
 			while(true) {
-			System.out.println("Type 'partial' for partial vaccinations data, type 'full' for full vaccinations data.> ");
+			System.out.println("Type 'partial' for partial vaccinations data, type 'full' for full vaccinations data> ");
 			System.out.flush();
 			String ans = in.next(); 
+			contentToLog = ans;
+			Logging.logToFile(contentToLog);
 			if(ans.equalsIgnoreCase("partial")) {
 				showVaccPerCapita(true);
 				break;
@@ -47,7 +59,7 @@ public class CommandLineUserInterface {
 				showVaccPerCapita(false);
 				break;
 			}else {
-				System.out.println("Invaid input, please type 'partial' or 'full'.> ");
+				System.out.println("Invaid input, please type 'partial' or 'full'> ");
 				System.out.flush();
 			}}
 		}else if(choice==3) {
@@ -101,20 +113,7 @@ public class CommandLineUserInterface {
 		System.out.flush();
 		
 	}
-	
-//	protected void showFullVacc() {
-//		System.out.println("BEGIN OUTPUT");
-//		Map<Integer, Double> zipVaccMap = covidProcessor.getFullVacc();
-//		for(Map.Entry<Integer, Double> entry : zipVaccMap.entrySet()) {
-//			double n = entry.getValue()* Math.pow(10, 4);
-//			n = Math.floor(n);
-//			n = n/Math.pow(10, 4);
-//			System.out.printf("%d %.4f%n",entry.getKey(),n);
-//		}
-//		System.out.println("END OUTPUT");
 
-//		
-//	}
 	
 
 	public String truncateInteger(double number) {
@@ -133,22 +132,28 @@ public class CommandLineUserInterface {
 	}
 
 	protected void getAverageProperyInfobyZipCode(String type, String calcType, boolean truncateFlag) {
-		System.out.println("Please enter a zip-code. ");
+		System.out.println("Please enter a zip-code> ");
 		System.out.flush();
 		String zipcode = in.next(); 
+		String contentToLog = zipcode;
+		Logging.logToFile(contentToLog);
 		double result = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, type, calcType);	
-		
+		System.out.println("BEGIN OUTPUT");
+		System.out.flush();
 		if(truncateFlag) {
 			System.out.println(zipcode + " " + truncateInteger(result));
 		}
+		System.out.println("END OUTPUT");
+		System.out.flush();
 	}
 	
 
 	protected void getMarketValuePerCapitalbyZipCode(String type, boolean truncateFlag) {
-		System.out.println("Please enter a zip-code. ");
+		System.out.println("Please enter a zip-code> ");
 		System.out.flush();
 		String zipcode = in.next(); 
-		
+		String contentToLog = zipcode;
+		Logging.logToFile(contentToLog);
 		double sum = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, type, "sum");	
 		int population = this.populationProcessor.getPopulationByZipcode(zipcode);
 		
@@ -156,9 +161,12 @@ public class CommandLineUserInterface {
 		if(population != 0 ) {
 			MarketValuePerCapital = sum/population;
 		}
-		
+		System.out.println("BEGIN OUTPUT");
+		System.out.flush();
 		if(truncateFlag) {
 			System.out.println(zipcode + " " +  truncateInteger(MarketValuePerCapital));
 		}
+		System.out.println("END OUTPUT");
+		System.out.flush();
 	}
 }

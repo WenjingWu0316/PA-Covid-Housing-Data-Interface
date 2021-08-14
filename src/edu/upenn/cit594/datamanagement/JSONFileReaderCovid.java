@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import edu.upenn.cit594.logging.Logging;
 import edu.upenn.cit594.util.CovidData;
 
 public class JSONFileReaderCovid implements CovidFileReader{
@@ -25,7 +26,8 @@ protected String filename;
 	}
 	@Override
 	public List<CovidData> getAllData(){
-		//System.out.println("-----dataManagement-JSON: getAllData called");
+		String contentToLog =this.filename;
+		Logging.logToFile(contentToLog);
 		List<CovidData> covidList = new ArrayList<CovidData>();
 		
 		FileReader filereader=null;
@@ -55,17 +57,17 @@ protected String filename;
 			Date timeStamp = null;
 			int parVacc;
 			int fullVacc ;
-			for(int i = 0; i<ja.size(); i++) { //
+			for(int i = 0; i<ja.size(); i++) { 
 				objLine = ja.get(i);
 				jo = (JSONObject) objLine;
-				//System.out.println(jo.get("location"));
+
 				try {
 					timeStamp = sdf.parse((String)jo.get("etl_timestamp"));
 				} catch (java.text.ParseException e) {
 					e.printStackTrace();
 				}
 				zipCode = String.valueOf(jo.get("zip_code")) ;
-				//System.out.println(jo.get("partially_vaccinated").equals(""));
+
 				if(jo.containsKey("partially_vaccinated")) {
 					parVacc = (int)(long)jo.get("partially_vaccinated");
 				}else {
@@ -77,10 +79,7 @@ protected String filename;
 					fullVacc =0;
 				}
 				CovidData c = new CovidData(timeStamp, zipCode, parVacc, fullVacc);
-//				System.out.println("timestamp is : "+timeStamp);
-//				System.out.println("zipcode is : "+zipCode);
-//				System.out.println("partialVacc is : "+parVacc);
-//				System.out.println("fullVacc is : "+fullVacc);
+
 				covidList.add(c);
 			
 			}
