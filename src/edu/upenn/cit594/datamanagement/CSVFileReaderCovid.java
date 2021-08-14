@@ -78,7 +78,8 @@ protected String filename;
 				Matcher m = p.matcher(line.trim());
 				
 				if(m.matches()) {
-					timeStamp = sdf.parse(m.group(timestampCol));
+					String ts = m.group(timestampCol);
+					timeStamp = sdf.parse(ts.substring(1, ts.length()-1));
 					zipCode = m.group(zipcodeCol);
 					partialVacc = (m.group(partialVaccCol).equals(""))? 0: Integer.parseInt(m.group(partialVaccCol));
 					fullVacc = (m.group(fullVaccCol).equals(""))? 0: Integer.parseInt(m.group(fullVaccCol)); 
