@@ -2,6 +2,7 @@ package edu.upenn.cit594.ui;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -63,6 +64,7 @@ public class CommandLineUserInterface {
 				System.out.println("Invaid input, please type 'partial' or 'full'> ");
 				System.out.flush();
 			}}
+			
 		}else if(choice==3) {
 			
 			getAverageProperyInfobyZipCode("Market Value", "average", true);
@@ -77,6 +79,16 @@ public class CommandLineUserInterface {
 	
 		}
 		else if(choice==6) {
+			
+			System.out.println("Type 'partial' for partial vaccinations data, type 'full' for full vaccinations data> ");
+			System.out.flush();
+			boolean partialFlag = checkValidUserInput(in, "partial", "full");
+			
+			System.out.println("Type 'highest' or 'lowest' to search for town with the highest/lowest vaccination.");
+			System.out.flush();
+			boolean highestVaccFlag = checkValidUserInput(in, "highest", "lowest");
+			
+			printHighestVaccAreaInfo(partialFlag, highestVaccFlag);
 			
 		}else if(choice==0) {
 			run =0;
@@ -118,7 +130,6 @@ public class CommandLineUserInterface {
 	}
 
 	
-
 	public String truncateInteger(double number) {
 		
 		String numberString = String.valueOf(number);
@@ -171,5 +182,81 @@ public class CommandLineUserInterface {
 		}
 		System.out.println("END OUTPUT");
 		System.out.flush();
+	}
+	
+	/*
+	 * Check if user inputs are valid and ask for new input if the user input is invalid.
+	 */
+	protected boolean checkValidUserInput(Scanner in, String expectedInput1, String expectedInput2) {
+		
+		boolean flag;
+		String ans = in.next(); 
+		while(true) {
+			if(ans.equalsIgnoreCase(expectedInput1)) {
+				flag = true;
+				break;
+			}else if(ans.equalsIgnoreCase(expectedInput2)) {
+				flag = false;
+				break;
+			}else {
+				System.out.format("Invaid input, please type '%s' or '%s'.\n", expectedInput1, expectedInput2);
+				System.out.flush();
+				flag = checkValidUserInput(in, expectedInput1, expectedInput2);		
+				break;
+			}		
+		}
+		return flag;			
+	}
+	
+	/*
+	 * Find the max/min entry of a map
+	 */
+	protected Entry<String, Double> findMaxorMinEntry(Map<String, Double> map, boolean maxFlag) {
+		
+		Entry<String, Double> resultEntry = null;
+		
+		if (maxFlag) {
+			for (Entry<String, Double> entry : map.entrySet()) {
+			    if (resultEntry == null || resultEntry.getValue() < entry.getValue()) 
+			    	resultEntry = entry;
+			}
+		}else {
+			for (Entry<String, Double> entry : map.entrySet()) {
+			    if (resultEntry == null || resultEntry.getValue() > entry.getValue()) 
+			    	resultEntry = entry;
+			}
+		}
+		return resultEntry;
+	}
+	
+	
+	/***
+	 * Print information for the area with the highest/lowest partially/fully vaccination rate.
+	 * @param partial boolean variable to indicate whether 
+	 */
+	protected void printHighestVaccAreaInfo(boolean partialFlag, boolean highestVaccFlag) {
+		
+		Map<String, Double> VaccCount = this.covidProcessor.getVaccCount(partialFlag);
+
+		Entry<String, Double> resultEntry = findMaxorMinEntry(VaccCount, highestVaccFlag);
+		
+		String zipcode = resultEntry.getKey();
+		Double VaccRate = resultEntry.getValue();
+		
+		double avgMarketValue = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, "Market Value", "average");	
+		double avgLivableArea = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, "Total Livable Area", "average");	
+		int population = this.populationProcessor.getPopulationByZipcode(zipcode);
+		
+		String highestVaccFlagString = ((highestVaccFlag)? "highest": "lowest");
+		String partialFlagString = ((partialFlag)? "partial": "full");
+		
+		System.out.format("The area (zipcode: %s) has the %s %s vaccination rate: %.1f%%.\n", zipcode, highestVaccFlagString, partialFlagString, VaccRate * 100);
+		System.out.flush();
+		
+		System.out.format("There are %d people living in that area.\n", population);
+		System.out.flush();
+		
+		System.out.format("The average property value there is %.0f, and the average liveable area is %.0f.\n", avgMarketValue, avgLivableArea);
+		System.out.flush();	
 	}
 }
