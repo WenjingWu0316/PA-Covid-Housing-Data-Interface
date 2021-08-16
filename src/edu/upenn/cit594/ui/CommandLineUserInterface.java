@@ -88,7 +88,7 @@ public class CommandLineUserInterface {
 			System.out.flush();
 			boolean highestVaccFlag = checkValidUserInput(in, "highest", "lowest");
 			
-			printHighestVaccAreaInfo(partialFlag, highestVaccFlag);
+			printVaccAreaInfo(partialFlag, highestVaccFlag);
 			
 		}else if(choice==0) {
 			run =0;
@@ -234,7 +234,7 @@ public class CommandLineUserInterface {
 	 * Print information for the area with the highest/lowest partially/fully vaccination rate.
 	 * @param partial boolean variable to indicate whether 
 	 */
-	protected void printHighestVaccAreaInfo(boolean partialFlag, boolean highestVaccFlag) {
+	protected void printVaccAreaInfo(boolean partialFlag, boolean highestVaccFlag) {
 		
 		Map<String, Double> VaccCount = this.covidProcessor.getVaccCount(partialFlag);
 
