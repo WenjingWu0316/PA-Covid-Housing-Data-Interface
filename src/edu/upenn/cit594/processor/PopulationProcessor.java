@@ -11,8 +11,8 @@ public class PopulationProcessor {
 	
 	
 	List<Population> populationList;
-	int totalPopulation;
-	Map<String, Integer> populationMap;
+	int totalPopulation;//int for memoization
+	Map<String, Integer> populationMap;//Map for memoization
 
 	public PopulationProcessor(PopulationFileReader reader) {
 		populationList = reader.getAllData();
@@ -40,17 +40,6 @@ public class PopulationProcessor {
 		return total;
 	}
 	
-	/*
-	 * Get population by zip code
-	 */
-//	public int getPopulationByZipcode(String zipcode) {
-//		for (Population p: this.populationList) {
-//			if(p.getZipCode().equals(zipcode)) {
-//				return p.getPopulation();
-//			}
-//		}
-//		return 0;
-//	}
 	public int getPopulationByZipcode(String zipcode) {
 		Map<String, Integer> populationMap = this.getPopulationMap();
 		if(populationMap.containsKey(zipcode)) {
