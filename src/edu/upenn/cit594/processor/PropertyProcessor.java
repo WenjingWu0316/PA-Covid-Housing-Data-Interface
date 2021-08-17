@@ -64,7 +64,7 @@ public class PropertyProcessor {
 				sum += val;
 			}
 			
-			if(calcType == "average") {
+			if(calcType.equalsIgnoreCase("average")) {
 				result = sum/values.size();
 			}else {
 				result = sum;
