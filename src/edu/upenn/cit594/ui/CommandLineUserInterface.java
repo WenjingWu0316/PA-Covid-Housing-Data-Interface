@@ -2,6 +2,7 @@ package edu.upenn.cit594.ui;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,6 +37,16 @@ public class CommandLineUserInterface {
 		int choice;
 		int run = 1;
 		
+		// Memoization map for #3
+		Map<String, Double> avgMarketValueMap = new HashMap<>();
+		
+		// Memoization map for #4
+		Map<String, Double> avgLivableAreaMap = new HashMap<>();
+		
+		// Memoization map for #5
+		Map<String, Double> MarketValuePerCapitaMap = new HashMap<>();
+				
+		
 		while(run==1) {
 		System.out.println("Enter 0 to exit, enter 1 to show total population, enter 2 to show vaccinations per capita, enter 3 to show average market value,"
 				+ " enter 4 to show average total livable area, enter 5 to show total residential market value per capita> ");
@@ -54,6 +65,7 @@ public class CommandLineUserInterface {
 			String ans = in.next(); 
 			contentToLog = ans;
 			Logging.logToFile(contentToLog);
+			
 			if(ans.equalsIgnoreCase("partial")) {
 				showVaccPerCapita(true);
 				break;
@@ -67,19 +79,18 @@ public class CommandLineUserInterface {
 			
 		}else if(choice==3) {
 			
-			getAverageProperyInfobyZipCode("Market Value", "average", true);
-
+			avgMarketValueMap = getAverageProperyInfobyZipCode(avgMarketValueMap, "Market Value", "average", true);
+			
 		}else if(choice==4) {
 			
-			getAverageProperyInfobyZipCode("Total Livable Area", "average", true);
+			avgLivableAreaMap = getAverageProperyInfobyZipCode(avgLivableAreaMap, "Total Livable Area", "average", true);
 			
 		}else if(choice==5) {
 			
-			getMarketValuePerCapitalbyZipCode("Market Value", true);
+			MarketValuePerCapitaMap = getMarketValuePerCapitalbyZipCode(MarketValuePerCapitaMap, "Market Value", true);
 	
 		}
 		else if(choice==6) {
-			
 			System.out.println("Type 'partial' for partial vaccinations data, type 'full' for full vaccinations data> ");
 			System.out.flush();
 			boolean partialFlag = checkValidUserInput(in, "partial", "full");
@@ -130,6 +141,7 @@ public class CommandLineUserInterface {
 	}
 
 	
+
 	public String truncateInteger(double number) {
 		
 		String numberString = String.valueOf(number);
@@ -145,13 +157,23 @@ public class CommandLineUserInterface {
 		return "0";
 	}
 
-	protected void getAverageProperyInfobyZipCode(String type, String calcType, boolean truncateFlag) {
+	protected Map<String, Double> getAverageProperyInfobyZipCode(Map<String, Double> resultsMap, String type, String calcType, boolean truncateFlag) {
 		System.out.println("Please enter a zip-code> ");
 		System.out.flush();
 		String zipcode = in.next(); 
 		String contentToLog = zipcode;
 		Logging.logToFile(contentToLog);
-		double result = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, type, calcType);	
+		
+
+		// Check if the memoization map already contains the infomation. If yes, just retieve it; otherwise, calculate it.
+		double result;
+		if(resultsMap.containsKey(zipcode)) {
+			result = resultsMap.get(zipcode);
+		}else {
+			result = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, type, calcType);	
+			resultsMap.put(zipcode, result);
+		}
+		
 		System.out.println("BEGIN OUTPUT");
 		System.out.flush();
 		if(truncateFlag) {
@@ -159,34 +181,43 @@ public class CommandLineUserInterface {
 		}
 		System.out.println("END OUTPUT");
 		System.out.flush();
+		
+		return(resultsMap);
 	}
 	
-
-	protected void getMarketValuePerCapitalbyZipCode(String type, boolean truncateFlag) {
+	protected Map<String, Double> getMarketValuePerCapitalbyZipCode(Map<String, Double> resultsMap, String type, boolean truncateFlag) {
 		System.out.println("Please enter a zip-code> ");
 		System.out.flush();
 		String zipcode = in.next(); 
 		String contentToLog = zipcode;
 		Logging.logToFile(contentToLog);
-		double sum = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, type, "sum");	
-		int population = this.populationProcessor.getPopulationByZipcode(zipcode);
-		
-		double MarketValuePerCapital = 0;
-		if(population != 0 ) {
-			MarketValuePerCapital = sum/population;
+
+		// Check if the memoization map already contains the infomation. If yes, just retieve it; otherwise, calculate it.
+		double result = 0;
+		if(resultsMap.containsKey(zipcode)) {
+			result = resultsMap.get(zipcode);
+		}else {
+			double sum = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, type, "sum");	
+			int population = this.populationProcessor.getPopulationByZipcode(zipcode);
+			
+			if(population != 0 ) {
+				result = sum/population;
+			}
+			resultsMap.put(zipcode, result);
 		}
+		
 		System.out.println("BEGIN OUTPUT");
 		System.out.flush();
 		if(truncateFlag) {
-			System.out.println(zipcode + " " +  truncateInteger(MarketValuePerCapital));
+			System.out.println(zipcode + " " +  truncateInteger(result));
 		}
 		System.out.println("END OUTPUT");
 		System.out.flush();
+		
+		return(resultsMap);
 	}
 	
-	/*
-	 * Check if user inputs are valid and ask for new input if the user input is invalid.
-	 */
+	
 	protected boolean checkValidUserInput(Scanner in, String expectedInput1, String expectedInput2) {
 		
 		boolean flag;
