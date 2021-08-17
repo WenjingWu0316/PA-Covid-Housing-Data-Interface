@@ -3,6 +3,7 @@ package edu.upenn.cit594.ui;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -44,7 +45,7 @@ public class CommandLineUserInterface {
 		
 		// Memoization map for #5
 		Map<String, Double> MarketValuePerCapitaMap = new HashMap<>();
-		
+				
 		
 		while(run==1) {
 		System.out.println("Enter 0 to exit, enter 1 to show total population, enter 2 to show vaccinations per capita, enter 3 to show average market value,"
@@ -98,7 +99,7 @@ public class CommandLineUserInterface {
 			System.out.flush();
 			boolean highestVaccFlag = checkValidUserInput(in, "highest", "lowest");
 			
-			printVaccAreaInfo(partialFlag, highestVaccFlag);
+			printVaccAreaInfo(partialFlag, highestVaccFlag, avgMarketValueMap, avgLivableAreaMap);
 			
 		}else if(choice==0) {
 			run =0;
@@ -260,22 +261,48 @@ public class CommandLineUserInterface {
 	}
 	
 	
-	/***
+	
+	/**
 	 * Print information for the area with the highest/lowest partially/fully vaccination rate.
-	 * @param partial boolean variable to indicate whether 
+	 * @param partialFlag boolean to indicate whether to look at partial vaccination data.
+	 * @param highestVaccFlag boolean to indicate whether to select an area with the highest vaccination rate.
+	 * @param avgMarketValueMap  Memoized map of average market value (used in #3)
+	 * @param avgLivableAreaMap Memoized map of average total livable area (used in #4)
 	 */
-	protected void printVaccAreaInfo(boolean partialFlag, boolean highestVaccFlag) {
+	protected void printVaccAreaInfo(boolean partialFlag, boolean highestVaccFlag, 
+			Map<String, Double> avgMarketValueMap, 
+			Map<String, Double> avgLivableAreaMap) {
 		
 		Map<String, Double> VaccCount = this.covidProcessor.getVaccCount(partialFlag);
-
-		Entry<String, Double> resultEntry = findMaxorMinEntry(VaccCount, highestVaccFlag);
+		
+		// Select the highest/lowest vaccinated area based on highestVaccFlag
+		Entry<String, Double> resultEntry;
+		resultEntry = findMaxorMinEntry(VaccCount, highestVaccFlag);
 		
 		String zipcode = resultEntry.getKey();
 		Double VaccRate = resultEntry.getValue();
 		
-		double avgMarketValue = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, "Market Value", "average");	
-		double avgLivableArea = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, "Total Livable Area", "average");	
+		// Get average market value by zipcode
+		double avgMarketValue;
+		if(avgMarketValueMap.containsKey(zipcode)) {
+			avgMarketValue = avgMarketValueMap.get(zipcode);
+		}else {
+			avgMarketValue = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, "Market Value", "average");	
+			avgMarketValueMap.put(zipcode, avgMarketValue);
+		}
+		
+		// Get average livable area by zipcode
+		double avgLivableArea;
+		if(avgLivableAreaMap.containsKey(zipcode)) {
+			avgLivableArea = avgLivableAreaMap.get(zipcode);
+		}else {
+			avgLivableArea = this.propertyProcessor.calcStatisticsbyZipcode(zipcode, "Total Livable Area", "average");	
+			avgLivableAreaMap.put(zipcode, avgLivableArea);
+		}
+		
+		// Get population by zipcode
 		int population = this.populationProcessor.getPopulationByZipcode(zipcode);
+		
 		
 		String highestVaccFlagString = ((highestVaccFlag)? "highest": "lowest");
 		String partialFlagString = ((partialFlag)? "partial": "full");
