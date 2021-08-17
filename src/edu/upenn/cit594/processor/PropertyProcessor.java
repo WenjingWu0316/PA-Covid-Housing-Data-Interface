@@ -39,7 +39,17 @@ public class PropertyProcessor {
 		
 		Double value;
 		
-		if (type.equalsIgnoreCase("Market Value")) {
+		/*
+		for(Property property: this.Properties) {
+			if (property.getZipcode().equals(zipcode) ) {
+				if((value = property.getValueByName(type)) != null) {
+					values.add(value);
+				}	
+			}
+		}
+		
+		*/
+		if (type.equals("Market Value")) {
 			for(Property property: this.Properties) {
 				if (property.getZipcode().equals(zipcode) ) {
 					if((value=property.getMarketvalue()) != null ) {
@@ -47,7 +57,7 @@ public class PropertyProcessor {
 					}	
 				}
 			}
-		}else if (type.equalsIgnoreCase("Total Livable Area")){
+		}else if (type.equals("Total Livable Area")){
 			for(Property property: this.Properties) {
 				if (property.getZipcode().equals(zipcode)) {
 					if((value=property.getTotalLivableArea()) != null ) {
@@ -64,7 +74,7 @@ public class PropertyProcessor {
 				sum += val;
 			}
 			
-			if(calcType.equalsIgnoreCase("average")) {
+			if(calcType == "average") {
 				result = sum/values.size();
 			}else {
 				result = sum;

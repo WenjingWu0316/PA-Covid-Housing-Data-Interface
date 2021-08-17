@@ -21,7 +21,7 @@ public class Logging {
 	}
 	
 	public void setInstance(String filename) {
-		
+		if(this.out!=null) {out.close();}
 		File file = new File(filename);	
 		try {
 			this.setOut(new PrintWriter(new FileWriter(file, true)));

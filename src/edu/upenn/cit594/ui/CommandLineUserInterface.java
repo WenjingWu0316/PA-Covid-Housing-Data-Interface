@@ -3,7 +3,6 @@ package edu.upenn.cit594.ui;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -45,7 +44,7 @@ public class CommandLineUserInterface {
 		
 		// Memoization map for #5
 		Map<String, Double> MarketValuePerCapitaMap = new HashMap<>();
-				
+		
 		
 		while(run==1) {
 		System.out.println("Enter 0 to exit, enter 1 to show total population, enter 2 to show vaccinations per capita, enter 3 to show average market value,"

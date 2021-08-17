@@ -11,40 +11,53 @@ public class PopulationProcessor {
 	
 	
 	List<Population> populationList;
-	
+	int totalPopulation;
+	Map<String, Integer> populationMap;
 
 	public PopulationProcessor(PopulationFileReader reader) {
 		populationList = reader.getAllData();
-		
+		totalPopulation = 0;
+		populationMap = null;
 		}
 	
 	
 	public Map<String, Integer> getPopulationMap(){
-		Map<String, Integer> populationMap = new HashMap<>();
+		if(this.populationMap!=null) {return this.populationMap;}
+		this.populationMap = new HashMap<>();
 		for(Population p:populationList) {
-			populationMap.put(p.getZipCode(), p.getPopulation());
+			this.populationMap.put(p.getZipCode(), p.getPopulation());
 		}
-		return populationMap;
+		return this.populationMap;
 	}
 	
 	public int getAllPopulation() {
-		int totalPopulation = 0;
+		if(this.totalPopulation!=0) {return this.totalPopulation;}
+		int total = 0;
 		for(Population p : populationList) {
-			totalPopulation += p.getPopulation();
+			total += p.getPopulation();
 		}
-		return totalPopulation;
+		this.totalPopulation = total;
+		return total;
 	}
 	
 	/*
 	 * Get population by zip code
 	 */
+//	public int getPopulationByZipcode(String zipcode) {
+//		for (Population p: this.populationList) {
+//			if(p.getZipCode().equals(zipcode)) {
+//				return p.getPopulation();
+//			}
+//		}
+//		return 0;
+//	}
 	public int getPopulationByZipcode(String zipcode) {
-		for (Population p: this.populationList) {
-			if(p.getZipCode().equals(zipcode)) {
-				return p.getPopulation();
-			}
+		Map<String, Integer> populationMap = this.getPopulationMap();
+		if(populationMap.containsKey(zipcode)) {
+			return populationMap.get(zipcode);
 		}
 		return 0;
 	}
+	
 	
 }

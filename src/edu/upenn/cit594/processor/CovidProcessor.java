@@ -16,11 +16,13 @@ public class CovidProcessor {
 	Map<String, Integer> populationMap;
 	CovidFileReader reader;
 	List<Population> populationList;
+	Map<String, Double> zipVaccMap;
 
 	public CovidProcessor(PopulationProcessor populationProcessor, CovidFileReader reader){
 		covidList = reader.getAllData();
 		populationList = populationProcessor.populationList;
 		populationMap = populationProcessor.getPopulationMap();
+		zipVaccMap = null;
 	}
 
 	public Date findLatestTime() {
@@ -37,9 +39,9 @@ public class CovidProcessor {
 	
 	
 	public Map<String, Double> getVaccCount(boolean partial) {
-
+		if(this.zipVaccMap!=null) {return this.zipVaccMap;}
 		Date lastestTime = findLatestTime();
-		Map<String, Double> zipVaccMap = new TreeMap<>();
+		this.zipVaccMap = new TreeMap<>();
 		Date timeStamp;
 		String zipCode;
 		int Population;
@@ -54,12 +56,12 @@ public class CovidProcessor {
 			if(timeStamp.equals(lastestTime) && Population!=0) {
 				if(populationMap.containsKey(zipCode)) {
 					double vaccPerCapita = (double) Population/populationMap.get(zipCode);
-					zipVaccMap.put(zipCode, vaccPerCapita);
+					this.zipVaccMap.put(zipCode, vaccPerCapita);
 
 				}
 			}
 		}
-		return zipVaccMap;
+		return this.zipVaccMap;
 	}
 
 }
