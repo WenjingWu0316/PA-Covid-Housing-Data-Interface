@@ -39,16 +39,6 @@ public class PropertyProcessor {
 		
 		Double value;
 		
-		/*
-		for(Property property: this.Properties) {
-			if (property.getZipcode().equals(zipcode) ) {
-				if((value = property.getValueByName(type)) != null) {
-					values.add(value);
-				}	
-			}
-		}
-		
-		*/
 		if (type.equals("Market Value")) {
 			for(Property property: this.Properties) {
 				if (property.getZipcode().equals(zipcode) ) {
