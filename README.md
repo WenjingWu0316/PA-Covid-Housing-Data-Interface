@@ -1,5 +1,5 @@
-594 Final Project Report
-Team 041: Shuo Li, Wenjing Wu
+Project Report
+Team member: Shuo Li, Wenjing Wu
 
 1. Additional Feature. 
 
