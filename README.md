@@ -1,3 +1,7 @@
+This project implements three file readers for JSON/CSV/TXT data, two processors to process housing and covid data, one file logger to log user's events.
+
+Techniques used: strategy design pattern, singleton design pattern, memoization, RegEx, state machine, string parsing.
+
 Project Report
 
 Team member: Shuo Li, Wenjing Wu
