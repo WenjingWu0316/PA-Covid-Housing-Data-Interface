@@ -2,6 +2,9 @@ This project implements three file readers for JSON/CSV/TXT data, two processors
 
 Techniques used: strategy design pattern, singleton design pattern, memoization, RegEx, state machine, string parsing.
 
+![Project GIF](594proj.gif)
+
+
 Project Report
 
 Team member: Shuo Li, Wenjing Wu
